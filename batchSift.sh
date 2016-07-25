@@ -10,3 +10,4 @@ do
     TIME_FILE=$(${SIFTCMD} ${SIFTARG_FILE} | grep "RUN SIFT"| sed -e "s/\[.*\]//")
     echo ${file} "${TIME_FILE}s">>time_consume.csv
 done
+echo "Batch processing is finished, plz backup the time_comsume.csv if it is necessary"
