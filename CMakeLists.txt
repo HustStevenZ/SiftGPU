@@ -165,4 +165,4 @@ ENDIF()
 
 set(SIMPLESIFT_SOURCE src/TestWin/SimpleSIFT.cpp)
 add_executable(SimpleSIFT ${SIMPLESIFT_SOURCE})
-target_link_libraries(SimpleSIFT SiftGPU)
+target_link_libraries(SimpleSIFT SiftGPU dl)
