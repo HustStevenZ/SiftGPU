@@ -203,6 +203,7 @@ void BasicTestWin::RunSiftGPU()
 	if(_sift->RunSIFT())
 	{
 		_sift->SetVerbose(2);
+		exit(0);
 		FitWindow();
 	}else
 	{

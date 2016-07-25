@@ -12,7 +12,7 @@ int main(int argc,char** argv)
 
     SiftConsole* sift = new SiftConsole(argc,argv);
 
-    sift->RunSiftGPU();
+    sift->RunSiftGPU(argc,argv);
     delete sift;
     return 0;
 }
@@ -21,21 +21,25 @@ SiftConsole::SiftConsole(int argc, char **argv) {
 
     _sift = new SiftGPUEX();
 
-    ParseSiftParam(argc,argv);
+
 
 }
 SiftConsole::~SiftConsole() {
     delete _sift;
 }
+//
+//void SiftConsole::ParseSiftParam(int argc, char **argv) {
+//    _sift->ParseParam(argc, argv);
+//    _sift->SetVerbose(5);
+//}
 
-void SiftConsole::ParseSiftParam(int argc, char **argv) {
+void SiftConsole::RunSiftGPU(int argc, char **argv) {
+
     _sift->ParseParam(argc, argv);
-    _sift->SetVerbose(5);
-}
-
-void SiftConsole::RunSiftGPU() {
+//    _sift->CreateContextGL();
     if(_sift->RunSIFT())
     {
+        _sift->SaveSIFT("test");
         _sift->SetVerbose(2);
 
     }else
