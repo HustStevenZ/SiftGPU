@@ -225,7 +225,7 @@ bool ProgramBagCL::InitializeContext()
         CL_CONTEXT_PLATFORM, (cl_context_properties)_platform,
         CL_GL_CONTEXT_KHR, (cl_context_properties)wglGetCurrentContext(),
         CL_WGL_HDC_KHR, (cl_context_properties)wglGetCurrentDC(),  0 };
-#elif defined(__LINUX__)
+#elif defined(__linux__)
 
         cl_context_properties prop[] = {
         CL_CONTEXT_PLATFORM, (cl_context_properties)_platform,
