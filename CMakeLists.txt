@@ -1,6 +1,7 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.0.2)
 project(SiftGPU)
 
+LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/src/cmake/")
 add_definitions("-DWINDOW_PREFER_GLUT")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -Wall -Wno-deprecated -pthread ")
@@ -21,7 +22,7 @@ endif(NOT IL_FOUND)
 #########################################################
 # FIND GLUT
 #########################################################
-find_package(Glut REQUIRED)
+find_package(GLUT REQUIRED)
 include_directories(${GLUT_INCLUDE_DIRS})
 link_directories(${GLUT_LIBRARY_DIRS})
 add_definitions(${GLUT_DEFINITIONS})
@@ -59,6 +60,8 @@ if (OpenCL_FOUND)
             src/SiftGPU/PyramidCL.h
             src/SiftGPU/CLTexImage.cpp
             src/SiftGPU/CLTexImage.h)
+ELSE()
+    MESSAGE("OpenCL Not Found, disbaled  by default")
 endif ()
 
 
@@ -71,9 +74,19 @@ link_libraries(${GLEW_LIBRARIES})
 if(NOT GLEW_FOUND)
     message("GLEW IS NOT FOUND!")
 endif()
+
+#########################################################
+# FIND CUDA
+#########################################################
 find_package(CUDA)
 if(CUDA_FOUND)
+
     include_directories(${CUDA_INCLUDE_DIRS})
+        link_directories()
+    add_definitions("-DCUDA_SIFTGPU_ENABLED")
+        set(ENABLE_CUDA TRUE)
+    SET(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS};-O2;-Xcompiler;-fPIC;-DCUDA_SIFTGPU_ENABLED")
+    CUDA_INCLUDE_DIRECTORIES($(CMAKE_CURRENT_SOURCE_DIR)/include)
 #    link_directories(${})
     set(CUDA_PROGRAM_SOURCE
             src/SiftGPU/CuTexImage.cpp
@@ -83,7 +96,10 @@ if(CUDA_FOUND)
             src/SiftGPU/ProgramCU.h
             src/SiftGPU/SiftMatchCU.cpp
             src/SiftGPU/SiftMatchCU.h)
+ELSE()
+    message("CUDA IS NOT FOUND. IF YOUR CUDA TOOLKIT IS INSTALLED, PLZ SET CUDA_TOOLKIT_ROOT_DIR AND TRY ONCE AGAIN.")
 endif()
+
 set(SOURCE_FILES
         include/GL/glew.h
         include/GL/glut.h
@@ -112,14 +128,27 @@ set(SOURCE_FILES
         src/SiftGPU/SiftMatch.h
         src/SiftGPU/SiftPyramid.cpp
         src/SiftGPU/SiftPyramid.h
-        ${OPENCL_PROGRAM_SOURCE}
-        ${CUDA_PROGRAM_SOURCE})
+        ${OPENCL_PROGRAM_SOURCE})
 
 
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
-add_library(SiftGPUStatic STATIC ${SOURCE_FILES} )
-add_library(SiftGPU SHARED ${SOURCE_FILES} )
+
+if(CUDA_FOUND)
+    set(CUDA_PROGRAM_SOURCE
+            ${CUDA_PROGRAM_SOURCE}
+            src/SiftGPU/ProgramCU.cu)
+    set(SOURCE_FILES ${SOURCE_FILES}
+            ${CUDA_PROGRAM_SOURCE}
+           src/SiftGPU/ )
+    CUDA_ADD_LIBRARY(SiftGPUStatic STATIC ${SOURCE_FILES})
+    CUDA_ADD_LIBRARY(SiftGPU SHARED ${SOURCE_FILES} )
+    target_link_libraries(SiftGPU ${CUDA_LIBRARIES})
+    target_link_libraries(SiftGPUStatic ${CUDA_LIBRARIES})
+else()
+    add_library(SiftGPUStatic STATIC ${SOURCE_FILES} )
+    add_library(SiftGPU SHARED ${SOURCE_FILES} )
+ENDIF()
 
 set(TESTWINGLUT_SOURCE
         src/TestWin/BasicTestWin.cpp
@@ -130,5 +159,10 @@ set(TESTWINGLUT_SOURCE
 add_executable(TestWinGlut ${TESTWINGLUT_SOURCE})
 
 target_link_libraries(TestWinGlut SiftGPU)
+if(ENABLE_CUDA)
+    target_link_libraries(TestWinGlut ${CUDA_LIBRARIES})
+ENDIF()
 
-#add_executable(SiftGPU ${SOURCE_FILES})
+set(SIMPLESIFT_SOURCE src/TestWin/SimpleSIFT.cpp)
+add_executable(SimpleSIFT ${SIMPLESIFT_SOURCE})
+target_link_libraries(SimpleSIFT SiftGPU)
