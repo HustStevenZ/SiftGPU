@@ -22,8 +22,15 @@
 
 #if defined(CL_SIFTGPU_ENABLED) 
 
-#include <CL/opencl.h>
 #include <GL/glew.h>
+#ifdef __linux__
+#include <CL/cl.h>
+#include <CL/cl_gl.h>
+#include <GL/glx.h>
+#endif
+#ifdef WIN32
+#include <CL/opencl.h>
+#endif
 
 #include <iostream>
 #include <iomanip>
@@ -49,7 +56,7 @@ using namespace std;
 #ifndef WIN32_LEAN_AND_MEAN
 	#define WIN32_LEAN_AND_MEAN
 #endif
-#include <windows.h>
+//#include <windows.h>
 #endif 
 
 //////////////////////////////////////////////////////////////////////
@@ -207,10 +214,20 @@ bool ProgramBagCL::InitializeContext()
     //context;
     if(GlobalUtil::_UseSiftGPUEX)
     {
+
+#if  defined(_WIN32)
         cl_context_properties prop[] = {
         CL_CONTEXT_PLATFORM, (cl_context_properties)_platform,
         CL_GL_CONTEXT_KHR, (cl_context_properties)wglGetCurrentContext(),
         CL_WGL_HDC_KHR, (cl_context_properties)wglGetCurrentDC(),  0 };
+#else
+
+        cl_context_properties prop[] = {
+        CL_CONTEXT_PLATFORM, (cl_context_properties)_platform,
+        CL_GL_CONTEXT_KHR, (cl_context_properties)glXGetCurrentContext(),
+        CL_GLX_DISPLAY_KHR, (cl_context_properties)glXGetCurrentDisplay(),  0 };
+#endif
+
         _context = clCreateContext(prop, 1, &_device, NULL, NULL, &status);    
         if(status != CL_SUCCESS) return false;
     }else

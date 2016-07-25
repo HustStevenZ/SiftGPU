@@ -24,9 +24,20 @@
 
 
 #include "GL/glew.h"
-#include <CL/OpenCL.h>
+
+#ifdef __linux__
+#include <CL/cl.h>
+#include <CL/cl_gl.h>
+#include <GL/glx.h>
+#endif
+#ifdef WIN32
+#include <CL/opencl.h>
+#endif
+
 #include <iostream>
 #include <vector>
+#include <stdio.h>
+#include <string.h>
 #include <algorithm>
 #include <stdlib.h>
 #include <math.h>
