@@ -1,7 +1,7 @@
 #/usr/bin/env bash
 IMAGE_DIR=$1
 FILES=`ls -S -hr ${IMAGE_DIR}/*.jpg | tail -n 100`
-SIFTCMD="./build/TestWinGlut"
+SIFTCMD="./build/TestWinGlut -cuda"
 rm time_consume.csv
 touch time_consume.csv
 for file in ${FILES}
