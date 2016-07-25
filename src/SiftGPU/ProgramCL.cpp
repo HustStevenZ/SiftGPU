@@ -28,6 +28,11 @@
 #include <CL/cl_gl.h>
 #include <GL/glx.h>
 #endif
+#ifdef __APPLE__
+#include <OpenCL/opencl.h>
+#include <OpenCL/cl.h>
+#include <OpenGL/OpenGL.h>
+#endif
 #ifdef WIN32
 #include <CL/opencl.h>
 #endif
@@ -220,12 +225,22 @@ bool ProgramBagCL::InitializeContext()
         CL_CONTEXT_PLATFORM, (cl_context_properties)_platform,
         CL_GL_CONTEXT_KHR, (cl_context_properties)wglGetCurrentContext(),
         CL_WGL_HDC_KHR, (cl_context_properties)wglGetCurrentDC(),  0 };
-#else
+#elif defined(__LINUX__)
 
         cl_context_properties prop[] = {
         CL_CONTEXT_PLATFORM, (cl_context_properties)_platform,
         CL_GL_CONTEXT_KHR, (cl_context_properties)glXGetCurrentContext(),
         CL_GLX_DISPLAY_KHR, (cl_context_properties)glXGetCurrentDisplay(),  0 };
+#elif defined(__APPLE__)
+ // OS X
+
+    CGLContextObj     kCGLContext     = CGLGetCurrentContext();
+
+    CGLShareGroupObj  kCGLShareGroup  = CGLGetShareGroup(kCGLContext);
+
+        cl_context_properties prop[] = {
+                CL_CONTEXT_PLATFORM, (cl_context_properties)_platform,
+                CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE, (cl_context_properties)kCGLShareGroup,  0 };
 #endif
 
         _context = clCreateContext(prop, 1, &_device, NULL, NULL, &status);    

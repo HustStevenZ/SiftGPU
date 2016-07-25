@@ -24,6 +24,13 @@
 #define GL_TRANSFORM_H
 
 #include <math.h>
+
+#ifdef __APPLE__
+#include <OpenCL/opencl.h>
+#include <OpenCL/cl.h>
+#include <OpenGL/OpenGL.h>
+#include <OpenGL/gl.h>
+#endif
 class GlTransform
 {
 public:

@@ -24,6 +24,19 @@
 #ifndef CL_TEX_IMAGE_H
 #define CL_TEX_IMAGE_H
 
+#ifdef __linux__
+#include <CL/cl.h>
+#include <CL/cl_gl.h>
+#endif
+#ifdef __APPLE__
+#include <OpenCL/opencl.h>
+#include <OpenCL/cl.h>
+#include <OpenGL/OpenGL.h>
+#endif
+#ifdef WIN32
+#include <CL/opencl.h>
+#endif
+
 class GLTexImage;
 
 class CLTexImage
