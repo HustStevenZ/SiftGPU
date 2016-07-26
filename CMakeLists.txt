@@ -128,6 +128,8 @@ set(SOURCE_FILES
         src/SiftGPU/SiftMatch.h
         src/SiftGPU/SiftPyramid.cpp
         src/SiftGPU/SiftPyramid.h
+        src/SiftGPU/SiftFileLoader.cpp
+        src/SiftGPU/SiftFileLoader.h
         ${OPENCL_PROGRAM_SOURCE})
 
 
@@ -173,3 +175,7 @@ include_directories(${SIFT_INC_DIR})
 set(SIFT_CONSOLE_SOURCE src/TestWin/SiftConsole.cpp src/TestWin/SiftConsole.h)
 add_executable(SiftConsole ${SIFT_CONSOLE_SOURCE})
 target_link_libraries(SiftConsole SiftGPU)
+
+set(MATCH_CONSOLE_SOURCE src/TestWin/MatchConsole.cpp src/TestWin/MatchConsole.h)
+add_executable(MatchConsole ${MATCH_CONSOLE_SOURCE})
+target_link_libraries(MatchConsole SiftGPU)

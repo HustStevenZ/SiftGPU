@@ -1113,8 +1113,8 @@ void ProgramBagCL::LoadDisplayShaders()
     //"uniform sampler2DRect tex; void main(){\n"
     //"vec4 pc = texture2DRect(tex, gl_TexCoord[0].xy);	bvec2 ff = lessThan(fract(gl_TexCoord[0].xy), vec2(0.5));\n"
     //"float v = ff.y?(ff.x? pc.r : pc.g):(ff.x?pc.b:pc.a); gl_FragColor = vec4(vec3(v), 1.0);}");
-	s_unpack = new ProgramCL("main", 
-    "__kernel void main(__read_only  image2d_t input, __write_only image2d_t output,\n"
+	s_unpack = new ProgramCL("s_unpack",
+    "__kernel void s_unpack(__read_only  image2d_t input, __write_only image2d_t output,\n"
     "                   int width, int height) {\n"
     "sampler_t sampler = CLK_NORMALIZED_COORDS_FALSE | CLK_ADDRESS_CLAMP_TO_EDGE | CLK_FILTER_NEAREST;\n"
     "int x = get_global_id(0), y =  get_global_id(1); \n"
@@ -1127,8 +1127,8 @@ void ProgramBagCL::LoadDisplayShaders()
     "float4 result = (float4) (v, v, v, 1);"
     "write_imagef(output, (int2) (x, y), result); }"  , _context, _device);
 
-	s_unpack_dog = new ProgramCL("main", 
-    "__kernel void main(__read_only  image2d_t input, __write_only image2d_t output,\n"
+	s_unpack_dog = new ProgramCL("s_unpack_dog",
+    "__kernel void s_unpack_dog(__read_only  image2d_t input, __write_only image2d_t output,\n"
     "                   int width, int height) {\n"
     "sampler_t sampler = CLK_NORMALIZED_COORDS_FALSE | CLK_ADDRESS_CLAMP_TO_EDGE | CLK_FILTER_NEAREST;\n"
     "int x = get_global_id(0), y =  get_global_id(1); \n"
@@ -1142,8 +1142,8 @@ void ProgramBagCL::LoadDisplayShaders()
     "float4 result = (float4) (v, v, v, 1);"
     "write_imagef(output, (int2) (x, y), result); }"  , _context, _device);
 	
-    s_unpack_grd = new ProgramCL("main", 
-    "__kernel void main(__read_only  image2d_t input, __write_only image2d_t output,\n"
+    s_unpack_grd = new ProgramCL("s_unpack_grd",
+    "__kernel void s_unpack_grd(__read_only  image2d_t input, __write_only image2d_t output,\n"
     "                   int width, int height) {\n"
     "sampler_t sampler = CLK_NORMALIZED_COORDS_FALSE | CLK_ADDRESS_CLAMP_TO_EDGE | CLK_FILTER_NEAREST;\n"
     "int x = get_global_id(0), y =  get_global_id(1); \n"
@@ -1157,8 +1157,8 @@ void ProgramBagCL::LoadDisplayShaders()
     "float4 result = (float4) (v, v, v, 1);"
     "write_imagef(output, (int2) (x, y), result); }"  , _context, _device);
 
-	s_unpack_key = new ProgramCL("main", 
-    "__kernel void main(__read_only  image2d_t dog,\n"
+	s_unpack_key = new ProgramCL("s_unpack_key",
+    "__kernel void s_unpack_key(__read_only  image2d_t dog,\n"
     "                   __read_only image2d_t key,\n"
     "                   __write_only image2d_t output,\n"
     "                   int width, int height) {\n"

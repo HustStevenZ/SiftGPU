@@ -14,6 +14,7 @@ public:
     ~SiftConsole();
     void RunSiftGPU(int argc, char **argv);
 
+//    void initGL();
     void ParseSiftParam(int argc, char** argv);
 private:
 
