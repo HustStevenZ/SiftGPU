@@ -85,7 +85,7 @@ if(CUDA_FOUND)
         link_directories()
     add_definitions("-DCUDA_SIFTGPU_ENABLED")
         set(ENABLE_CUDA TRUE)
-    SET(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS};-O2;-Xcompiler;-fPIC;-DCUDA_SIFTGPU_ENABLED")
+    SET(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS};-D_FORCE_INLINES;-O2;-Xcompiler;-fPIC;-DCUDA_SIFTGPU_ENABLED")
     CUDA_INCLUDE_DIRECTORIES($(CMAKE_CURRENT_SOURCE_DIR)/include)
 #    link_directories(${})
     set(CUDA_PROGRAM_SOURCE
