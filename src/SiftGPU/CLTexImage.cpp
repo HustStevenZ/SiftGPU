@@ -169,7 +169,7 @@ void CLTexImage::CopyFromHost(const void * buf)
             _imgWidth * _imgHeight * _numChannel * sizeof(float),  buf,  0, NULL, NULL);
     }else
     {
-        size_t origin[3] = {0, 0, 0}, region[3] = {_imgWidth, _imgHeight, 1};
+        size_t origin[3] = {0, 0, 0}, region[3] = {(size_t)_imgWidth, (size_t)_imgHeight, 1};
         size_t row_pitch = _imgWidth * _numChannel * sizeof(float);
         status = clEnqueueWriteImage(_queue, _clData, false, origin,
             region, row_pitch, 0, buf, 0, 0, 0);  
@@ -216,7 +216,7 @@ void CLTexImage::CopyToHost(void * buf)
             _imgWidth * _imgHeight * _numChannel * sizeof(float), buf,  0, NULL, NULL);
     }else
     {
-        size_t origin[3] = {0, 0, 0}, region[3] = {_imgWidth, _imgHeight, 1};
+        size_t origin[3] = {0, 0, 0}, region[3] = {(size_t)_imgWidth, (size_t)_imgHeight, 1};
         size_t row_pitch = _imgWidth * _numChannel * sizeof(float);
         status = clEnqueueReadImage(_queue, _clData, true, origin,
             region, row_pitch, 0, buf, 0, 0, 0);
