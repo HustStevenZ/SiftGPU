@@ -5,11 +5,17 @@
 #include "SiftAndMatch.h"
 #include <iostream>
 #include <SiftGPU.h>
+#include <vector>
+
+#include <SiftFileLoader.h>
+#ifdef __linux__
+#include <GL/glut.h>
+
+#endif
 #ifdef __APPLE__
 
 #include <OpenGL/gl.h>
 #include <GLUT/glut.h>
-#include <vector>
 
 #endif
 using namespace std;
@@ -46,6 +52,17 @@ int main(int argc,char** argv)
         sift->GetFeatureVector(&key2[0],&description2[0]);
     }
 
+    std::vector<float> keypoint0;
+    std::vector<float> loaddescription0;
+
+    std::vector<float> keypoint1;
+    std::vector<float> loaddescription1;
+    int descip_per_point0 =0;
+    int descip_per_point1 =0;
+    string filename1(argv[2]);
+    string filename2(argv[3]);
+//    SiftFileLoader::loadFile(filename1+".sift",keypoint0,loaddescription0,descip_per_point0);
+//    SiftFileLoader::loadFile(filename2+".sift",keypoint1,loaddescription1,descip_per_point1);
     SiftMatchGPU* matchGPU = new SiftMatchGPU(std::max(key1.size()/4,key2.size()/4));
 //        glutInit(&argc,argv);
 //    matchGPU->CreateContextGL();

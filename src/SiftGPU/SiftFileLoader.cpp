@@ -17,12 +17,14 @@ void SiftFileLoader::loadFile(std::string fileName, std::vector<float> &keyPoint
         int featureNumber = 0;
         int siftFileType = 0;
         int linenumber = 0;
-        while (file.eof())
+        while (!file.eof())
         {
             std::string line;
             std::getline(file,line);
 
 
+            if(file.eof())
+                return;
             int numFloat = 0;
             float floats[20] = {0.0f};
 
@@ -55,7 +57,7 @@ void SiftFileLoader::loadFile(std::string fileName, std::vector<float> &keyPoint
 //            }while(floatEndPos!=std::string::npos);
 //
 //            floats[floatindex] = std::atoi((linecopy.substr(startPos,linecopy.length()-1).c_str()));
-            if(floatindex == 1 && linenumber == 0)
+            if(floatindex == 2 && linenumber == 0)
             {
                 //First line
                 featureNumber = floats[0];
@@ -63,7 +65,7 @@ void SiftFileLoader::loadFile(std::string fileName, std::vector<float> &keyPoint
                 descp_per_point = siftFileType;
                 //First line?
             }
-            else if(floatindex == 3)
+            else if(floatindex == 4)
             {
                 //Point line
                 float x = floats[0];
@@ -80,7 +82,7 @@ void SiftFileLoader::loadFile(std::string fileName, std::vector<float> &keyPoint
             {
                 for(int i = 0;i<floatindex;i++)
                 {
-                    float value = floats[i];
+                    float value = (floats[i]+0.5)/512.0f;
                     descriptionBuffer.push_back(value);
                 }
             }

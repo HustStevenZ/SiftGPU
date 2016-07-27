@@ -14,10 +14,21 @@
 
 int main(int argc,char** argv)
 {
-    if(argc!=3)
+    if(argc!=4)
         return -1;
-    if(argc==3)
+
+    if(argc==4)
     {
+        SiftGPU* sift = new SiftGPU();
+        glutInit(&argc,argv);
+        int id;
+        glutInitDisplayMode (GLUT_RGBA | GLUT_DOUBLE);
+        glutInitWindowSize (0,0);
+        glutInitWindowPosition(0,0);
+        id = glutCreateWindow ("SIFT_GPU");
+
+        sift->ParseParam(2,argv);
+
         std::vector<float> keypoint0;
         std::vector<float> description0;
 
@@ -25,13 +36,13 @@ int main(int argc,char** argv)
         std::vector<float> description1;
         int descip_per_point0 =0;
         int descip_per_point1 =0;
-        SiftFileLoader::loadFile(argv[1],keypoint0,description0,descip_per_point0);
-        SiftFileLoader::loadFile(argv[2],keypoint1,description1,descip_per_point1);
+        SiftFileLoader::loadFile(argv[2],keypoint0,description0,descip_per_point0);
+        SiftFileLoader::loadFile(argv[3],keypoint1,description1,descip_per_point1);
 
 
         SiftMatchGPU* matchGPU = new SiftMatchGPU(std::max(keypoint0.size()/4,keypoint1.size()/4));
 //        glutInit(&argc,argv);
-        matchGPU->CreateContextGL();
+        matchGPU->VerifyContextGL();
         matchGPU->SetDescriptors(0,keypoint0.size()/4,&description0[0]);
         matchGPU->SetDescriptors(1,keypoint1.size()/4,&description1[0]);
 
