@@ -179,3 +179,7 @@ target_link_libraries(SiftConsole SiftGPU)
 set(MATCH_CONSOLE_SOURCE src/TestWin/MatchConsole.cpp src/TestWin/MatchConsole.h)
 add_executable(MatchConsole ${MATCH_CONSOLE_SOURCE})
 target_link_libraries(MatchConsole SiftGPU)
+
+set(SIFTMATCH_CONSOLE_SOURCE src/TestWin/SiftAndMatch.cpp src/TestWin/SiftAndMatch.h)
+add_executable(SiftAndMatch ${SIFTMATCH_CONSOLE_SOURCE})
+target_link_libraries(SiftAndMatch SiftGPU)
