@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import sys
+import datetime
 from os import system
 from os import listdir
 from os.path import isfile, join
@@ -18,6 +19,7 @@ for i in range(number-1):
         # print(str(i)+" "+str(i+1+j))
         # print(onlyfiles[i]+' '+onlyfiles[i+1+j])
         arg=onlyfiles[i]+' '+onlyfiles[i+1+j]
-        cmd='./build/MatchConsole'
+        cmd='./build/MatchConsole -cuda'
         cmdstr = cmd+ " "+ arg
+	cmdstr+=">/dev/null 2>&1" #mute output
         system(cmdstr)
