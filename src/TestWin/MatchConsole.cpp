@@ -4,13 +4,38 @@
 
 #include "MatchConsole.h"
 #include <SiftFileLoader.h>
+#include <SiftGPU.h>
+#include <math.h>
+#include <iostream>
+
 int main(int argc,char** argv)
 {
-    if(argc>1)
+    if(argc!=3)
+        return -1;
+    if(argc==3)
     {
-        std::vector<float> keypoint;
-        std::vector<float> description;
-        int descip_per_point;
-        SiftFileLoader::loadFile(argv[1],keypoint,description,descip_per_point);
+        std::vector<float> keypoint0;
+        std::vector<float> description0;
+
+        std::vector<float> keypoint1;
+        std::vector<float> description1;
+        int descip_per_point0 =0;
+        int descip_per_point1 =0;
+        SiftFileLoader::loadFile(argv[1],keypoint0,description0,descip_per_point0);
+        SiftFileLoader::loadFile(argv[2],keypoint1,description1,descip_per_point1);
+
+
+        SiftMatchGPU* matchGPU = new SiftMatchGPU(std::max(keypoint0.size()/4,keypoint1.size()/4));
+        matchGPU->CreateContextGL();
+        matchGPU->SetDescriptors(0,keypoint0.size()/4,&description0[0]);
+        matchGPU->SetDescriptors(1,keypoint1.size()/4,&description1[0]);
+
+        int (*match_buf)[2] = new int[std::max(keypoint0.size()/4,keypoint1.size()/4)][2];
+        //use the default thresholds. Check the declaration in SiftGPU.h
+        int num_match = matchGPU->GetSiftMatch(std::max(keypoint0.size()/4,keypoint1.size()/4), match_buf);
+        std::cout << num_match << " sift matches were found;\n";
+
     }
+    return 0;
+
 }
