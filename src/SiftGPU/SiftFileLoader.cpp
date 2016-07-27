@@ -7,6 +7,7 @@
 #include "SiftFileLoader.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <cstring>
 
 void SiftFileLoader::loadFile(std::string fileName, std::vector<float> &keyPointBuffer, std::vector<float> &descriptionBuffer,int &descp_per_point) {
     std::ifstream file(fileName);
@@ -16,7 +17,7 @@ void SiftFileLoader::loadFile(std::string fileName, std::vector<float> &keyPoint
         int featureNumber = 0;
         int siftFileType = 0;
         int linenumber = 0;
-        while (file.good())
+        while (file.eof())
         {
             std::string line;
             std::getline(file,line);
@@ -28,18 +29,32 @@ void SiftFileLoader::loadFile(std::string fileName, std::vector<float> &keyPoint
             int startPos = 0;
             int floatEndPos = 0;
             int floatindex = 0;
-            do{
-                floatEndPos = line.find(' ',startPos);
-
-                if(floatEndPos!=std::string::npos)
-                {
-                    floats[floatindex] = atof((line.substr(startPos,floatEndPos-1).c_str()));
-                    startPos = floatEndPos+1;
-                    floatindex++;
-                }
-            }while(floatEndPos!=std::string::npos);
-
-            floats[floatindex] = std::atoi((line.substr(startPos,line.length()-1).c_str()));
+//            std::cout<<line<<std::endl;
+            char* linestr= (char*)malloc(line.length()+1);
+            strcpy(linestr,line.data());
+            char* token = strtok(linestr," ");
+            do
+            {
+                floats[floatindex] = atof(token);
+                floatindex++;
+                token = strtok(NULL," ");
+            }while(token!=NULL);
+//
+//            floats[floatindex] = atof(token);
+//            std::cout<<linestr<<std::endl;
+//            std::string linecopy(linestr);
+//            do{
+//                floatEndPos = linecopy.find(' ',startPos);
+//
+//                if(floatEndPos!=std::string::npos)
+//                {
+//                    floats[floatindex] = atof((linecopy.substr(startPos,floatEndPos-1).c_str()));
+//                    startPos = floatEndPos+1;
+//                    floatindex++;
+//                }
+//            }while(floatEndPos!=std::string::npos);
+//
+//            floats[floatindex] = std::atoi((linecopy.substr(startPos,linecopy.length()-1).c_str()));
             if(floatindex == 1 && linenumber == 0)
             {
                 //First line

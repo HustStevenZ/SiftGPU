@@ -7,6 +7,10 @@
 #include <SiftGPU.h>
 #include <math.h>
 #include <iostream>
+#ifdef __linux__
+
+#include <GL/glut.h>
+#endif
 
 int main(int argc,char** argv)
 {
@@ -26,6 +30,7 @@ int main(int argc,char** argv)
 
 
         SiftMatchGPU* matchGPU = new SiftMatchGPU(std::max(keypoint0.size()/4,keypoint1.size()/4));
+//        glutInit(&argc,argv);
         matchGPU->CreateContextGL();
         matchGPU->SetDescriptors(0,keypoint0.size()/4,&description0[0]);
         matchGPU->SetDescriptors(1,keypoint1.size()/4,&description1[0]);

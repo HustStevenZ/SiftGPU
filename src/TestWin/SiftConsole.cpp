@@ -14,6 +14,12 @@ using std::iostream;
 #include <GLUT/glut.h>
 #endif
 
+#ifdef __linux__
+
+#include <GL/gl.h>
+#include <GL/glx.h>
+#include <GL/glut.h>
+#endif
 
 
 int main(int argc,char** argv)

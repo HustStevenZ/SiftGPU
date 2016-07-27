@@ -4,7 +4,7 @@ from os import system
 from os import listdir
 from os.path import isfile, join
 from subprocess import call
-mypath=sys[1]
+mypath=sys.argv[1]
 onlyfiles=[]
 for f in listdir(mypath):
     if(f.endswith('.sift')):
